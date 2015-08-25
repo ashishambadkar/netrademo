@@ -1,7 +1,9 @@
 package com.example.netra;
 
+import java.security.spec.MGF1ParameterSpec;
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import com.example.netra.Tracking.DownloadTask;
 //import com.example.netra.MainActivity.MarkerInfoWindowAdapter;
 import com.google.android.gms.common.ConnectionResult;
@@ -19,9 +21,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
 import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Context;
+import android.graphics.Interpolator;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -34,6 +38,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.BounceInterpolator;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -70,20 +75,22 @@ public class HomeFragment extends Fragment {
         instance = savedInstanceState;
         inflaterInsideActivity = (LayoutInflater) getActivity().getSystemService( Context.LAYOUT_INFLATER_SERVICE );
         // Initialize the HashMap for Markers and MyMarker object
+        
+        
+        
         mMarkersHashMap = new HashMap<Marker, MyMarker>();
-
         // mMyMarkersArray.add(new MyMarker("T1", "icon1", Double.parseDouble("77.338193"), Double.parseDouble("77.338193"),"tree planted 5 years back"));
-        mMyMarkersArray.add(new MyMarker("T2", "Green", Double.parseDouble("16.221686"), Double.parseDouble("77.338708"),"tree planted 12 years back"));
-        mMyMarkersArray.add(new MyMarker("T3", "Green", Double.parseDouble("16.221682"), Double.parseDouble("77.338708"),"tree planted 10 years back"));
-        mMyMarkersArray.add(new MyMarker("T4", "Green", Double.parseDouble("16.218719"), Double.parseDouble("77.340252"),"tree planted 15 years back"));
-        mMyMarkersArray.add(new MyMarker("T5", "Green", Double.parseDouble("16.218058"), Double.parseDouble("77.338124"),"tree planted 11 years back"));
-        mMyMarkersArray.add(new MyMarker("T6", "Green", Double.parseDouble("16.218006"), Double.parseDouble("77.338275"),"tree planted 7 years back"));
-        mMyMarkersArray.add(new MyMarker("T7", "Green", Double.parseDouble("16.218037"), Double.parseDouble("77.338296"),"tree planted 5 years back"));
-        mMyMarkersArray.add(new MyMarker("T8", "Green", Double.parseDouble("16.217975"), Double.parseDouble("77.338350"),"tree planted 5 years back"));
-        mMyMarkersArray.add(new MyMarker("T9", "Green", Double.parseDouble(" 16.217903"), Double.parseDouble("77.338285"),"tree planted 25 years back"));
-        mMyMarkersArray.add(new MyMarker("T10", "Green", Double.parseDouble("16.217893"), Double.parseDouble("77.338328"),"tree planted 25 years back"));
-        mMyMarkersArray.add(new MyMarker("T11","Green", Double.parseDouble("16.217842"), Double.parseDouble("77.338393"),"tree planted 25 years back"));		
-        mMyMarkersArray.add(new MyMarker("T12", "Green", Double.parseDouble("16.217811"), Double.parseDouble("77.338457"),"tree planted 25 years back"));
+        mMyMarkersArray.add(new MyMarker("T2", "GREEN", Double.parseDouble("16.221686"), Double.parseDouble("77.338708"),"tree planted 12 years back"));
+        mMyMarkersArray.add(new MyMarker("T3", "GREEN", Double.parseDouble("16.221682"), Double.parseDouble("77.338708"),"tree planted 10 years back"));
+        mMyMarkersArray.add(new MyMarker("T4", "GREEN", Double.parseDouble("16.218719"), Double.parseDouble("77.340252"),"tree planted 15 years back"));
+        mMyMarkersArray.add(new MyMarker("T5", "GREEN", Double.parseDouble("16.218058"), Double.parseDouble("77.338124"),"tree planted 11 years back"));
+        mMyMarkersArray.add(new MyMarker("T6", "GREEN", Double.parseDouble("16.218006"), Double.parseDouble("77.338275"),"tree planted 7 years back"));
+        mMyMarkersArray.add(new MyMarker("T7", "GREEN", Double.parseDouble("16.218037"), Double.parseDouble("77.338296"),"tree planted 5 years back"));
+        mMyMarkersArray.add(new MyMarker("T8", "GREEN", Double.parseDouble("16.217975"), Double.parseDouble("77.338350"),"tree planted 5 years back"));
+        mMyMarkersArray.add(new MyMarker("T9", "GREEN", Double.parseDouble(" 16.217903"), Double.parseDouble("77.338285"),"tree planted 25 years back"));
+        mMyMarkersArray.add(new MyMarker("T10", "GREEN", Double.parseDouble("16.217893"), Double.parseDouble("77.338328"),"tree planted 25 years back"));
+        mMyMarkersArray.add(new MyMarker("T11","GREEN", Double.parseDouble("16.217842"), Double.parseDouble("77.338393"),"tree planted 25 years back"));		
+        mMyMarkersArray.add(new MyMarker("T12", "GREEN", Double.parseDouble("16.217811"), Double.parseDouble("77.338457"),"tree planted 25 years back"));
 
         setUpMap();
         plotMarkers(mMyMarkersArray);     
@@ -116,7 +123,7 @@ public class HomeFragment extends Fragment {
 	  {
 		  // markerBuilder = new LatLngBounds.Builder();
 		  // LatLng position;
-		   
+		    
 		   for (MyMarker myMarker : markers) {
 			//   mMarkersHashMap.put(currentMarker, myMarker); 
 			   
@@ -125,16 +132,18 @@ public class HomeFragment extends Fragment {
 			  // MarkerOptions mOptions;
 			   MarkerOptions mOptions = new MarkerOptions().position(new LatLng(myMarker.getmLatitude(), myMarker.getmLongitude()));
 			  
-			   if((myMarker.getmIcon()).equals("Green")){	   
+			   if((myMarker.getmIcon()).equals("GREEN")){	   
 				   mOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));				   
 			   }else{
 				   mOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-				   myMarker.setmIcon("Red");
+				   //myMarker.setmIcon("RED");
 			   }
 			 
 			   Marker mMarker = googleMap.addMarker(mOptions);
 			   mMarkersHashMap.remove(marker);
-               mMarkersHashMap.put(mMarker, myMarker);  
+               mMarkersHashMap.put(mMarker, myMarker);
+               
+              // mMyMarkersArray.remove(object);
                Log.i("HomeFragment", " mMarkersHashMap.size" + mMarkersHashMap.size());
                Log.i("HomeFragment", " Label :" + myMarker.getmLabel());
                Log.i("HomeFragment", " Icon :" + myMarker.getmIcon());
@@ -190,11 +199,11 @@ public class HomeFragment extends Fragment {
 		
 		super.onResume();
 		
-		if(mMyMarkersArray != null)
+		if(mMarkersHashMap != null)
 		{	
 			
 	//		setUpMap();
-	//		BuildOnResume(mMyMarkersArray);
+			BuildOnResume(mMyMarkersArray);
 	 //     markerBuilderRegion(mMyMarkersArray);
 	        
 		}
@@ -252,7 +261,7 @@ public class HomeFragment extends Fragment {
 	                	  // ShowAnimation(marker);
 	                	   //marker.showInfoWindow();
 	                	   
-	                	//   Tracking track = new Tracking(globalContext);
+	                	   
 	                   //	   String str=""; 
 	                   	//   str = track.GetLocationInfo(globalContext);
 	                	//   if(str != null)
@@ -266,8 +275,12 @@ public class HomeFragment extends Fragment {
 	                		  mMarkersHashMap.put(marker, myMarker);
 	                		  Log.d("Netra" , "SIZEEEEEEE  2:::::" + mMarkersHashMap.size());
 	                		  
-	                		//  LatLng latLng = GetMylocation(track);
-	                		//  GetMapDirectionSrcDesc(latLng, new LatLng(marker.getPosition().latitude, marker.getPosition().longitude));
+	                		  if (myMarker.getmIcon().equals("RED"))
+	                		  {
+	                			Tracking track = new Tracking(globalContext);
+	                		  	LatLng latLng = GetMylocation(track);
+	                		  	GetMapDirectionSrcDesc(latLng, new LatLng(marker.getPosition().latitude, marker.getPosition().longitude));
+	                		  }
 	                	   }
 	                	  
 	                	   ShowAnimation(marker);
@@ -465,27 +478,31 @@ public class HomeFragment extends Fragment {
 						//  marker.setVisible(false);
 						  Log.i("HomeFragment ",  " :Sensor Pos" + sensorData.lat + ","+ sensorData.lon);
 						  Log.i("HomeFragment ",  " :myMarker Pos" + myMarker.getmLatitude() + myMarker.getmLongitude());
-						  marker.setPosition(new LatLng(myMarker.getmLatitude(),myMarker.getmLongitude()));
-						  marker.setTitle(myMarker.getRemark());
+						
+						  LatLng latLng = new LatLng(myMarker.getmLatitude(), myMarker.getmLongitude());
 						  marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+						  marker.setTitle(myMarker.getRemark());
+						  animateMarker(marker,latLng ,false);
+						  marker.setPosition(new LatLng(myMarker.getmLatitude(),myMarker.getmLongitude()));
+						  
+						  
+						 
 					//f	  Marker mMarker = googleMap.addMarker(mOptions);
 						  
 						 // Marker marker = getKeyFromValue(mMarkersHashMap, myMarker);
-						  marker.setVisible(true);
+						 // marker.setVisible(true);
 						  Log.i("HomeFragment ",  " :marker" + marker.getPosition());
-					//	  marker.remove();
-					//	  mMarker.setVisible(true);
-						  //mMarker.
-					//	  mMarkersHashMap.remove(marker);
 						  mMarkersHashMap.put(marker, myMarker); 
 						  Log.i("HomeFragment ",  "hashmap :size" + mMarkersHashMap.size());
 						  
 						  Log.i("HomeFragment ",  "pos :" + pos);
 						  mMyMarkersArray.remove(pos);
-						  mMyMarkersArray.add(myMarker);   
+						  mMyMarkersArray.add(myMarker);
+						
+						 
 						  Log.i("HomeFragment ",  "mMyMarkersArray :marker" + marker);
 						  getpath(marker);
-						  break;
+						  break ;
 					  }	  		
 				  } 
 				
@@ -499,7 +516,48 @@ public class HomeFragment extends Fragment {
 	 {
 		 Tracking track = new Tracking(globalContext);
          LatLng latLng = GetMylocation(track);
+         
          GetMapDirectionSrcDesc(latLng, new LatLng(marker.getPosition().latitude, marker.getPosition().longitude));
-    	
+         
 	 } 
+	 
+	 public static synchronized void animateMarker(final Marker marker, final LatLng toPosition,
+	            final boolean hideMarker) {
+	        final Handler handler = new Handler();
+	        final long start = SystemClock.uptimeMillis();
+	        Projection proj = googleMap.getProjection();
+	        Point startPoint = proj.toScreenLocation(marker.getPosition());
+	        final LatLng startLatLng = proj.fromScreenLocation(startPoint);
+	        final long duration = 5000;
+
+	        final LinearInterpolator interpolator = new LinearInterpolator();
+
+	        handler.post(new Runnable() {
+	            @Override
+	            public void run() {
+	                long elapsed = SystemClock.uptimeMillis() - start;
+	                float t = interpolator.getInterpolation((float) elapsed
+	                        / duration);
+	                double lng = t * toPosition.longitude + (1 - t)
+	                        * startLatLng.longitude;
+	                double lat = t * toPosition.latitude + (1 - t)
+	                        * startLatLng.latitude;
+	                marker.setPosition(new LatLng(lat, lng));
+	                googleMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(lat, lng)));
+	                googleMap.animateCamera(CameraUpdateFactory.zoomTo(12));
+
+	                if (t < 1.0) {
+	                    // Post again 16ms later.
+	                    handler.postDelayed(this, 16);
+	                } else {
+	                    if (hideMarker) {
+	                        marker.setVisible(false);
+	                    } else {
+	                        marker.setVisible(true);
+	                    }
+	                }
+	            }
+	        });
+	    }
+	 
 }

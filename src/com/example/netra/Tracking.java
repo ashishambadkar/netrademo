@@ -153,13 +153,6 @@ public class Tracking{
 	    return data;
 	}
 
-	static String urlEncode(String value) {
-	    try {
-	        return URLEncoder.encode(value, "UTF-8");
-	    } catch (UnsupportedEncodingException e) {
-	        return value;
-	    }
-	}
 	
 	// Fetches data from url passed
 	public class DownloadTask extends AsyncTask<String, CharSequence, String>{
