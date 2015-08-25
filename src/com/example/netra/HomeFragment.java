@@ -203,7 +203,7 @@ public class HomeFragment extends Fragment {
 		{	
 			
 	//		setUpMap();
-			BuildOnResume(mMyMarkersArray);
+	//		BuildOnResume(mMyMarkersArray);
 	 //     markerBuilderRegion(mMyMarkersArray);
 	        
 		}
